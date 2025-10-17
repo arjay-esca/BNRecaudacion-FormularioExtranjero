@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario - Banco de la Nación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1D1616 0%, #8E1616 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #EEEEEE;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #8E1616;
+        }
+
+        .header h1 {
+            color: #1D1616;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #8E1616;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #1D1616;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #D84040;
+        }
+
+        .optional {
+            color: #8E1616;
+            font-weight: normal;
+            font-size: 12px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+            color: #1D1616;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #D84040;
+            box-shadow: 0 0 0 3px rgba(216, 64, 64, 0.1);
+        }
+
+        .file-upload-group {
+            background: white;
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-group:hover {
+            border-color: #D84040;
+            background: #fafafa;
+        }
+
+        .file-upload-group.dragover {
+            border-color: #D84040;
+            background: #fff5f5;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            cursor: pointer;
+            color: #8E1616;
+            font-size: 14px;
+        }
+
+        .file-icon {
+            font-size: 40px;
+            color: #D84040;
+            margin-bottom: 10px;
+        }
+
+        .file-info {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #1D1616;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .dni-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .dni-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #D84040 0%, #8E1616 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(216, 64, 64, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #D84040;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Banco de la Nación</h1>
+            <p>Formulario de Registro - Consulado de Convenio</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✓ Formulario enviado exitosamente
+        </div>
+
+        <form id="registroForm">
+            <div class="form-group">
+                <label>Nombres <span class="required">*</span></label>
+                <input type="text" id="nombres" name="nombres" required>
+                <div class="error-message" id="errorNombres">Este campo es requerido</div>
+            </div>
+
+            <div class="form-group">
+                <label>Apellidos <span class="required">*</span></label>
+                <input type="text" id="apellidos" name="apellidos" required>
+                <div class="error-message" id="errorApellidos">Este campo es requerido</div>
+            </div>
+
+            <div class="form-group">
+                <label>Número de DNI <span class="required">*</span></label>
+                <input type="text" id="dni" name="dni" maxlength="8" pattern="[0-9]{8}" required placeholder="Ej: 12345678">
+                <div class="error-message" id="errorDni">Ingrese un DNI válido de 8 dígitos</div>
+            </div>
+
+            <div class="form-group">
+                <label>Correo Electrónico <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="ejemplo@correo.com">
+                <div class="error-message" id="errorEmail">Ingrese un correo válido</div>
+            </div>
+
+            <div class="form-group">
+                <label>Número Celular <span class="required">*</span></label>
+                <input type="tel" id="celular" name="celular" maxlength="9" pattern="[0-9]{9}" required placeholder="Ej: 987654321">
+                <div class="error-message" id="errorCelular">Ingrese un número válido de 9 dígitos</div>
+            </div>
+
+            <div class="form-group">
+                <label>Consulado de Convenio <span class="required">*</span></label>
+                <select id="consulado" name="consulado" required>
+                    <option value="">Seleccione un consulado</option>
+                    <option value="patterson-eeuu">Patterson - EEUU</option>
+                    <option value="miami-eeuu">Miami - EEUU</option>
+                    <option value="madrid-espana">Madrid - España</option>
+                    <option value="buenosaires-argentina">Buenos Aires - Argentina</option>
+                    <option value="santiago-chile">Santiago - Chile</option>
+                </select>
+                <div class="error-message" id="errorConsulado">Seleccione un consulado</div>
+            </div>
+
+            <div class="form-group">
+                <label>Captura de DNI <span class="required">*</span></label>
+                <div class="dni-section">
+                    <div>
+                        <div class="file-upload-group" id="dniAnversoZone">
+                            <div class="file-icon">📄</div>
+                            <label for="dniAnverso" class="file-label">
+                                <strong>DNI Anverso</strong><br>
+                                Click para seleccionar
+                            </label>
+                            <input type="file" id="dniAnverso" name="dniAnverso" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <div class="file-info">PDF, JPG, PNG (Máx. 5MB)</div>
+                            <div class="file-name" id="fileNameAnverso"></div>
+                        </div>
+                        <div class="error-message" id="errorDniAnverso">El DNI anverso es requerido</div>
+                    </div>
+
+                    <div>
+                        <div class="file-upload-group" id="dniReversoZone">
+                            <div class="file-icon">📄</div>
+                            <label for="dniReverso" class="file-label">
+                                <strong>DNI Reverso</strong><br>
+                                Click para seleccionar
+                            </label>
+                            <input type="file" id="dniReverso" name="dniReverso" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <div class="file-info">PDF, JPG, PNG (Máx. 5MB)</div>
+                            <div class="file-name" id="fileNameReverso"></div>
+                        </div>
+                        <div class="error-message" id="errorDniReverso">El DNI reverso es requerido</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Adjuntar Carta <span class="optional">(Opcional)</span></label>
+                <div class="file-upload-group" id="cartaZone">
+                    <div class="file-icon">📎</div>
+                    <label for="carta" class="file-label">
+                        <strong>Carta Adicional</strong><br>
+                        Click para seleccionar
+                    </label>
+                    <input type="file" id="carta" name="carta" accept=".pdf">
+                    <div class="file-info">Solo PDF (Máx. 5MB)</div>
+                    <div class="file-name" id="fileNameCarta"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Enviar Formulario</button>
+        </form>
+    </div>
+
+    <script>
+        // Manejo de archivos
+        function setupFileInput(inputId, zoneId, displayId) {
+            const input = document.getElementById(inputId);
+            const zone = document.getElementById(zoneId);
+            const display = document.getElementById(displayId);
+
+            zone.addEventListener('click', () => input.click());
+
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('dragover');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('dragover');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    input.files = e.dataTransfer.files;
+                    updateFileName(input, display);
+                }
+            });
+
+            input.addEventListener('change', () => updateFileName(input, display));
+        }
+
+        function updateFileName(input, display) {
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                display.textContent = `✓ ${file.name}`;
+            } else {
+                display.textContent = '';
+            }
+        }
+
+        setupFileInput('dniAnverso', 'dniAnversoZone', 'fileNameAnverso');
+        setupFileInput('dniReverso', 'dniReversoZone', 'fileNameReverso');
+        setupFileInput('carta', 'cartaZone', 'fileNameCarta');
+
+        // Validación del DNI (solo números)
+        document.getElementById('dni').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Validación del celular (solo números)
+        document.getElementById('celular').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Manejo del formulario
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let valid = true;
+            const errors = document.querySelectorAll('.error-message');
+            errors.forEach(error => error.style.display = 'none');
+
+            // Validar campos
+            const campos = ['nombres', 'apellidos', 'dni', 'email', 'celular', 'consulado'];
+            campos.forEach(campo => {
+                const input = document.getElementById(campo);
+                if (!input.value.trim() || !input.checkValidity()) {
+                    document.getElementById('error' + campo.charAt(0).toUpperCase() + campo.slice(1)).style.display = 'block';
+                    valid = false;
+                }
+            });
+
+            // Validar archivos DNI
+            if (!document.getElementById('dniAnverso').files.length) {
+                document.getElementById('errorDniAnverso').style.display = 'block';
+                valid = false;
+            }
+            if (!document.getElementById('dniReverso').files.length) {
+                document.getElementById('errorDniReverso').style.display = 'block';
+                valid = false;
+            }
+
+            if (valid) {
+                // Mostrar mensaje de éxito
+                const successMsg = document.getElementById('successMessage');
+                successMsg.style.display = 'block';
+                
+                // Simular envío y resetear formulario
+                setTimeout(() => {
+                    this.reset();
+                    document.querySelectorAll('.file-name').forEach(fn => fn.textContent = '');
+                    successMsg.style.display = 'none';
+                }, 3000);
+                
+                // Scroll al inicio
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
